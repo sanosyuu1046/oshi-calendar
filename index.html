@@ -22,8 +22,21 @@ function close(){ $('modal').classList.remove('show') }$('close').onclick=close;
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab,.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active')});
 function options(id=''){return '<option value="">推しを選択</option>'+db.oshi.map(o=>`<option value="${o.id}" ${o.id===id?'selected':''}>${esc(o.name)}</option>`).join('')}
 function photo(file,cb){if(!file){cb('');return}let r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(file)}
+function localDate(){
+ let d=new Date();
+ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
 function render(){
- $('sc').textContent=db.oshi.length;let today=new Date().toISOString().slice(0,10);$('uc').textContent=db.events.filter(e=>e.date>=today&&e.status!=='参加済み').length;$('dc').textContent=db.events.filter(e=>e.status==='参加済み').length;
+ let today=localDate(),changed=false;
+ db.events.forEach(e=>{
+  if(e.date&&e.date<today&&e.status!=='参加済み'){
+   e.status='参加済み';
+   changed=true;
+  }
+ });
+ if(changed)localStorage.setItem(KEY,JSON.stringify(db));
+ $('sc').textContent=db.oshi.length;
+ $('uc').textContent=db.events.filter(e=>e.date>=today&&e.status!=='参加済み').length;$('dc').textContent=db.events.filter(e=>e.status==='参加済み').length;
  let ev=[...db.events].sort((a,b)=>a.date.localeCompare(b.date));
  $('eventList').innerHTML=ev.length?ev.map(e=>`<article class="card"><strong>${esc(e.title)}</strong><div class="meta">${esc(e.date)} ・ ${esc(e.oshiName)}<br>${esc(e.venue)} ・ ${esc(e.status)}</div>${e.photo?`<img class="photo" src="${e.photo}">`:''}<div class="actions"><button class="tiny" onclick="done('${e.id}')">${e.status==='参加済み'?'参加予定に戻す':'参加済みにする'}</button><button class="tiny" onclick="editEvent('${e.id}')">編集</button><button class="tiny" onclick="del('events','${e.id}')">削除</button></div></article>`).join(''):'<div class="empty">イベントはまだありません。最初の予定を登録してみよう ✿</div>';
  $('oshiList').innerHTML=db.oshi.length?db.oshi.map(o=>`<article class="card"><strong>${esc(o.name)}</strong><div class="meta">${esc(o.group)}</div>${o.memo?`<p class="meta">${esc(o.memo)}</p>`:''}<span class="pill">MY OSHI</span><div class="actions"><button class="tiny" onclick="editOshi('${o.id}')">編集</button><button class="tiny" onclick="del('oshi','${o.id}')">削除</button></div></article>`).join(''):'<div class="empty">推しを登録してみよう ✿</div>';
