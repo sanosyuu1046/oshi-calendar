@@ -15,6 +15,7 @@
 const KEY='oshi-calendar-white-v1',uid=()=>Math.random().toString(36).slice(2,10);
 const initial=[['永田詩央里','≠ME'],['齋藤樹愛羅','=LOVE'],['さわだ','あっとほぉーむカフェ'],['ぽわわ','メイドカフェ'],['えっちゃん','メイドカフェ']].map(([name,group])=>({id:uid(),name,group}));
 let db=JSON.parse(localStorage.getItem(KEY)||'null')||{oshi:initial,events:[],diaries:[]};
+let eventFilter='all';
 const $=id=>document.getElementById(id),esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
 function modal(title,html){$('mt').textContent=title;$('mb').innerHTML=html;$('modal').classList.add('show')}
@@ -38,6 +39,9 @@ function render(){
  $('sc').textContent=db.oshi.length;
  $('uc').textContent=db.events.filter(e=>e.date>=today&&e.status!=='参加済み').length;$('dc').textContent=db.events.filter(e=>e.status==='参加済み').length;
  let ev=[...db.events].sort((a,b)=>a.date.localeCompare(b.date));
+ let filter=$('eventOshiFilter');
+filter.value=eventFilter;
+ev=ev.filter(e=>eventFilter==='all'||e.oshiId===eventFilter);
  $('eventList').innerHTML=ev.length?ev.map(e=>`<article class="card"><strong>${esc(e.title)}</strong><div class="meta">${esc(e.date)} ・ ${esc(e.oshiName)}<br>${esc(e.venue)} ・ ${esc(e.status)}</div>${e.photo?`<img class="photo" src="${e.photo}">`:''}<div class="actions">
 <button class="tiny" onclick="editEvent('${e.id}')">編集</button>
 <button class="tiny" onclick="del('events','${e.id}')">削除</button>
