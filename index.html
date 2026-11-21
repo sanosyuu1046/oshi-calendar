@@ -6,7 +6,14 @@
 <section class="hero"><small>MY FAVORITE DAYS</small><h2>好きな気持ちを、ひとつずつ。</h2><p>イベントも写真も思い出も。大切な推し活の記録をここにまとめよう。</p></section>
 <div class="stats"><div class="stat"><small>登録している推し</small><b id="sc">0</b></div><div class="stat"><small>これからの予定</small><b id="uc">0</b></div><div class="stat"><small>参加したイベント</small><b id="dc">0</b></div></div>
 <nav class="tabs"><button class="tab active" data-tab="events">イベント</button><button class="tab" data-tab="oshi">推しリスト</button><button class="tab" data-tab="diary">思い出日記</button></nav>
-<section class="panel active" id="events"><div class="head"><h3>イベント一覧</h3><button class="primary" id="newEvent">＋ イベント追加</button></div><div class="cards" id="eventList"></div></section>
+<section class="panel active" id="events"><div class="head"><h3>イベント一覧</h3><button class="primary" id="newEvent">＋ イベント追加</button></div><div class="field" style="margin:0 0 12px">
+<div class="field" style="margin:0 0 12px">
+<label for="eventOshiFilter">推しごとのイベント履歴</label>
+<select id="eventOshiFilter">
+<option value="all">すべての推し</option>
+</select>
+</div>
+</div><div class="cards" id="eventList"></div></section>
 <section class="panel" id="oshi"><div class="head"><h3>推しリスト</h3><button class="primary" id="newOshi">＋ 推しを追加</button></div><div class="cards" id="oshiList"></div></section>
 <section class="panel" id="diary"><div class="head"><h3>思い出日記</h3><button class="primary" id="newDiary">＋ 日記を書く</button></div><div class="cards" id="diaryList"></div></section>
 <footer>データはこのブラウザ内に保存されます。端末変更やブラウザのデータ削除に備えて、定期的に「データ保存」をしてください。ログイン・オンライン共有機能はまだありません。</footer>
@@ -40,6 +47,7 @@ function render(){
  $('uc').textContent=db.events.filter(e=>e.date>=today&&e.status!=='参加済み').length;$('dc').textContent=db.events.filter(e=>e.status==='参加済み').length;
  let ev=[...db.events].sort((a,b)=>a.date.localeCompare(b.date));
  let filter=$('eventOshiFilter');
+filter.innerHTML='<option value="all">すべての推し</option>'+db.oshi.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('');
 filter.value=eventFilter;
 ev=ev.filter(e=>eventFilter==='all'||e.oshiId===eventFilter);
  $('eventList').innerHTML=ev.length?ev.map(e=>`<article class="card"><strong>${esc(e.title)}</strong><div class="meta">${esc(e.date)} ・ ${esc(e.oshiName)}<br>${esc(e.venue)} ・ ${esc(e.status)}</div>${e.photo?`<img class="photo" src="${e.photo}">`:''}<div class="actions">
@@ -58,6 +66,10 @@ function done(id){let e=db.events.find(x=>x.id===id);e.status=e.status==='参加
 function del(t,id){if(confirm('削除してもいいですか？')){db[t]=db[t].filter(x=>x.id!==id);save()}}
 function editEvent(id){eventForm(db.events.find(x=>x.id===id))}function editOshi(id){oshiForm(db.oshi.find(x=>x.id===id))}function editDiary(id){diaryForm(db.diaries.find(x=>x.id===id))}
 $('newEvent').onclick=()=>eventForm();$('newOshi').onclick=()=>oshiForm();$('newDiary').onclick=()=>diaryForm();
+$('eventOshiFilter').onchange=e=>{
+ eventFilter=e.target.value;
+ render();
+};
 $('backup').onclick=()=>{let a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(db)],{type:'application/json'}));a.href=u;a.download='oshi-calendar-backup.json';a.click();URL.revokeObjectURL(u)};
 $('restore').onclick=()=>$('file').click();$('file').onchange=e=>{let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!d.oshi||!d.events||!d.diaries)throw 0;if(confirm('現在のデータを置き換えますか？')){db=d;save()}}catch{alert('バックアップを読み込めませんでした')}};if(e.target.files[0])r.readAsText(e.target.files[0])};
 function photo(file,cb){
