@@ -1,6 +1,29 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fbfaf8"><title>推し活カレンダー</title>
 <style>
 :root{--bg:#fbfaf8;--ink:#302e2a;--muted:#8d887f;--line:#eee9e2;--accent:#b98e79;--pale:#f5ebe5}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif}.app{max-width:900px;margin:auto;padding:22px 16px 60px}header,.head,.event{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:10px}.logo{background:var(--pale);border-radius:14px;padding:12px;font-size:21px}.brand h1{font-size:19px;margin:0}.brand small{color:var(--muted);letter-spacing:.15em}.hero{margin:22px 0;background:linear-gradient(120deg,#f4e9e2,#fff);border:1px solid #eee3dc;border-radius:22px;padding:24px}.hero small{color:var(--accent);letter-spacing:.16em}.hero h2{font-size:24px;margin:8px 0}.hero p{color:#777168;font-size:13px;margin:0;line-height:1.7}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:16px 0}.stat,.card{background:white;border:1px solid var(--line);border-radius:16px;padding:14px}.stat small,.muted{font-size:11px;color:var(--muted)}.stat b{display:block;font-size:23px;margin-top:4px}.tabs{display:flex;gap:7px;overflow:auto;margin:18px 0 12px}.tab,button{border:0;border-radius:11px;padding:10px 13px;cursor:pointer}.tab{background:#efede8;color:#777}.tab.active{background:#302e2a;color:#fff}.primary{background:var(--accent);color:white}.soft{background:white;border:1px solid var(--line);color:#6f6a62}.panel{display:none}.panel.active{display:block}.head{margin:16px 0}.head h3{font-size:17px;margin:0}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:11px}.card strong{font-size:15px}.meta{font-size:12px;color:var(--muted);line-height:1.6;margin-top:6px}.pill{display:inline-block;background:var(--pale);color:#986e59;border-radius:30px;padding:4px 9px;font-size:10px;margin-top:9px}.actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}.tiny{font-size:11px;padding:7px 9px;background:white;border:1px solid var(--line);color:#6b665e}.empty{background:white;border:1px dashed #e5ddd4;border-radius:16px;padding:25px;text-align:center;color:var(--muted);font-size:13px}.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:5px}.full{grid-column:1/-1}.field label{font-size:11px;color:var(--muted)}input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--ink);font:inherit}textarea{min-height:90px}.modal{display:none;position:fixed;inset:0;background:#2228;align-items:end;justify-content:center;padding:12px}.modal.show{display:flex}.box{background:var(--bg);padding:18px;border-radius:20px;width:min(600px,100%);max-height:90vh;overflow:auto}.boxhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.boxhead h3{margin:0}.photo{max-width:100%;max-height:170px;object-fit:cover;border-radius:12px;margin-top:10px}footer{text-align:center;color:#aaa;font-size:10px;line-height:1.7;margin-top:28px}@media(max-width:500px){.app{padding:15px 12px}.form{grid-template-columns:1fr}.full{grid-column:auto}.hero h2{font-size:21px}}
+.oshi-icon{
+ width:54px;
+ height:54px;
+ border-radius:50%;
+ object-fit:cover;
+ border:1px solid var(--line);
+ display:block;
+ margin-bottom:9px;
+}
+.event-title{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ margin-bottom:8px;
+}
+.event-icon{
+ width:48px;
+ height:48px;
+ flex:0 0 48px;
+ border-radius:50%;
+ object-fit:cover;
+ border:1px solid var(--line);
+}
 </style></head><body><main class="app">
 <header><div class="brand"><div class="logo">✿</div><div><h1>推し活カレンダー</h1><small>OSHI KATSU JOURNAL</small></div></div><div><button class="soft" id="backup">データ保存</button><button class="soft" id="restore">読込</button><input id="file" type="file" accept="application/json" hidden></div></header>
 <section class="hero"><small>MY FAVORITE DAYS</small><h2>好きな気持ちを、ひとつずつ。</h2><p>イベントも写真も思い出も。大切な推し活の記録をここにまとめよう。</p></section>
