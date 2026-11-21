@@ -40,5 +40,28 @@ function editEvent(id){eventForm(db.events.find(x=>x.id===id))}function editOshi
 $('newEvent').onclick=()=>eventForm();$('newOshi').onclick=()=>oshiForm();$('newDiary').onclick=()=>diaryForm();
 $('backup').onclick=()=>{let a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(db)],{type:'application/json'}));a.href=u;a.download='oshi-calendar-backup.json';a.click();URL.revokeObjectURL(u)};
 $('restore').onclick=()=>$('file').click();$('file').onchange=e=>{let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!d.oshi||!d.events||!d.diaries)throw 0;if(confirm('現在のデータを置き換えますか？')){db=d;save()}}catch{alert('バックアップを読み込めませんでした')}};if(e.target.files[0])r.readAsText(e.target.files[0])};
-render();
+function photo(file,cb){
+  if(!file){cb('');return}
+  let r=new FileReader();
+  r.onload=()=>{
+    let img=new Image();
+    img.onload=()=>{
+      let max=1400;
+      let scale=Math.min(1,max/Math.max(img.width,img.height));
+      let w=Math.round(img.width*scale);
+      let h=Math.round(img.height*scale);
+      let c=document.createElement('canvas');
+      let ctx=c.getContext('2d');
+      c.width=w;
+      c.height=h;
+      ctx.fillStyle='#fff';
+      ctx.fillRect(0,0,w,h);
+      ctx.drawImage(img,0,0,w,h);
+      cb(c.toDataURL('image/jpeg',0.78));
+    };
+    img.src=r.result;
+  };
+  r.readAsDataURL(file);
+}
+ render();
 </script></body></html>
