@@ -73,7 +73,7 @@ function render(){
 filter.innerHTML='<option value="all">すべての推し</option>'+db.oshi.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('');
 filter.value=eventFilter;
 ev=ev.filter(e=>eventFilter==='all'||e.oshiId===eventFilter);
- $('eventList').innerHTML=ev.length?ev.map(e=>`<article class="card"><strong>${esc(e.title)}</strong><div class="meta">${esc(e.date)} ・ ${esc(e.oshiName)}<br>${esc(e.venue)} ・ ${esc(e.status)}</div>${e.photo?`<img class="photo" src="${e.photo}">`:''}<div class="actions">
+ $('eventList').innerHTML=ev.length?ev.map(e=>`<article class="card">${db.oshi.find(o=>o.id===e.oshiId)?.icon?`<img class="oshi-icon" src="${db.oshi.find(o=>o.id===e.oshiId).icon}" alt="">`:''}<strong>${esc(e.title)}</strong><div class="meta">${esc(e.date)} ・ ${esc(e.oshiName)}<br>${esc(e.venue)} ・ ${esc(e.status)}</div>${e.photo?`<img class="photo" src="${e.photo}">`:''}<div class="actions">
 <button class="tiny" onclick="editEvent('${e.id}')">編集</button>
 <button class="tiny" onclick="del('events','${e.id}')">削除</button>
 </div></article>`).join(''):'<div class="empty">イベントはまだありません。最初の予定を登録してみよう ✿</div>';
