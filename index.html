@@ -24,6 +24,19 @@
  object-fit:cover;
  border:1px solid var(--line);
 }
+ .event-card-head{
+ display:flex;
+ align-items:flex-start;
+ justify-content:space-between;
+ gap:12px;
+}
+.event-card-info{
+ min-width:0;
+ flex:1;
+}
+.event-card-info .meta{
+ overflow-wrap:anywhere;
+}
 </style></head><body><main class="app">
 <header><div class="brand"><div class="logo">✿</div><div><h1>推し活カレンダー</h1><small>OSHI KATSU JOURNAL</small></div></div><div><button class="soft" id="backup">データ保存</button><button class="soft" id="restore">読込</button><input id="file" type="file" accept="application/json" hidden></div></header>
 <section class="hero"><small>MY FAVORITE DAYS</small><h2>好きな気持ちを、ひとつずつ。</h2><p>イベントも写真も思い出も。大切な推し活の記録をここにまとめよう。</p></section>
@@ -73,7 +86,7 @@ function render(){
 filter.innerHTML='<option value="all">すべての推し</option>'+db.oshi.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('');
 filter.value=eventFilter;
 ev=ev.filter(e=>eventFilter==='all'||e.oshiId===eventFilter);
- $('eventList').innerHTML=ev.length?ev.map(e=>`<article class="card">${db.oshi.find(o=>o.id===e.oshiId)?.icon?`<img class="oshi-icon" src="${db.oshi.find(o=>o.id===e.oshiId).icon}" alt="">`:''}<strong>${esc(e.title)}</strong><div class="meta">${esc(e.date)} ・ ${esc(e.oshiName)}<br>${esc(e.venue)} ・ ${esc(e.status)}</div>${e.photo?`<img class="photo" src="${e.photo}">`:''}<div class="actions">
+ $('eventList').innerHTML=ev.length?ev.map(e=>`<article class="card"><div class="event-card-head"><div class="event-card-info"><strong>${esc(e.title)}</strong><div class="meta">${esc(e.date)} ・ ${esc(e.oshiName)}<br>${esc(e.venue)} ・ ${esc(e.status)}</div></div>${db.oshi.find(o=>o.id===e.oshiId)?.icon?`<img class="event-icon" src="${db.oshi.find(o=>o.id===e.oshiId).icon}" alt="">`:''}</div>${e.photo?`<img class="photo" src="${e.photo}">`:''}<div class="actions">
 <button class="tiny" onclick="editEvent('${e.id}')">編集</button>
 <button class="tiny" onclick="del('events','${e.id}')">削除</button>
 </div></article>`).join(''):'<div class="empty">イベントはまだありません。最初の予定を登録してみよう ✿</div>';
